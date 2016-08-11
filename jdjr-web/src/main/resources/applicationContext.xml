@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-lazy-init="true">
+
+    <!-- 加载属性文件 -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath*:proper/jdbc.properties</value>
+            </list>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+    <context:component-scan base-package="com.jd.jrmserver">
+        <context:include-filter type="regex" expression="com.feiyahan.jdjr.service.*Service.*"/>
+        <context:exclude-filter type="regex" expression="com.feiyahan.jdjr.web.*.*"/>
+    </context:component-scan>
+
+    <!--导入sub spring配置文件-->
+    <import resource="classpath*:spring/spring-mvc-config.xml"/>
+</beans>
