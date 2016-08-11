@@ -9,6 +9,7 @@
         <property name="locations">
             <list>
                 <value>classpath*:proper/jdbc.properties</value>
+                <value>classpath*:proper/common.properties</value>
             </list>
         </property>
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
