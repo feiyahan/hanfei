@@ -5,4 +5,5 @@ package com.feiyahan.hanfei.service;
  */
 public interface IndexService {
     void printProperties();
+    String printSuccess(int num);
 }

@@ -8,20 +8,17 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>hanfei-service</artifactId>
     <packaging>jar</packaging>
     <dependencies>
+
         <dependency>
             <groupId>com.feiyahan</groupId>
             <artifactId>hanfei-pojo</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.feiyahan</groupId>
-            <artifactId>hanfei-akka</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
+
+    <artifactId>hanfei-akka</artifactId>
+
 
 </project>

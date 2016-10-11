@@ -30,4 +30,18 @@ public class IndexServiceImpl implements IndexService {
 //        UserInfo userInfo = JSONObject.parseObject(java.lang.String.valueOf(userInfoJson), UserInfo.class);
 //        logger.info("username={},password={}",userInfo.getUsername(),userInfo.getPassword());
     }
+    @Override
+    public String printSuccess(int num) {
+        /*try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+        for (int i=0;i<100;i++){
+            String result = "result "+i;
+        }
+        String result = "result "+num;
+        System.out.println(result);
+        return result;
+    }
 }
