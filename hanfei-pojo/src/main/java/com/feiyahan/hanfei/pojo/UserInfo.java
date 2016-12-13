@@ -5,8 +5,17 @@ package com.feiyahan.hanfei.pojo;
  */
 public class UserInfo {
 
+    private String uid;//用户ID
     private String username;//用户名
     private String password;//密码
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public String getUsername() {
         return username;

@@ -21,11 +21,16 @@ public class Main {
     // create a spring context and scan the classes
     AnnotationConfigApplicationContext ctx =
       new AnnotationConfigApplicationContext();
-    ctx.scan("com.feiyahan.hanfei.akka");
+    ctx.scan("com.feiyahan.hanfei.service.akka");
     ctx.refresh();
 
     // get hold of the actor system
     ActorSystem system = ctx.getBean(ActorSystem.class);
+    System.out.println("system===="+system);
+    system.shutdown();
+//    system.awaitTermination();
+    ActorSystem system2 = ctx.getBean(ActorSystem.class);
+    System.out.println("system2===="+system2);
     // use the Spring Extension to create props for a named actor bean
     ActorRef counter = system.actorOf(SpringExtension.SpringExtProvider.get(system).props("CountingActor"), "counter");
     ActorRef counter2 = system.actorOf(SpringExtension.SpringExtProvider.get(system).props("CountingActor"), "counter2");
@@ -53,5 +58,7 @@ public class Main {
       system.shutdown();
       system.awaitTermination();
     }
+
+
   }
 }

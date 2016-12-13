@@ -25,4 +25,16 @@
     <!--导入sub spring配置文件-->
     <import resource="classpath*:spring/spring-mvc-config.xml"/>
     <import resource="classpath*:spring/spring-mongodb-config.xml"/>
+
+    <!--异步线程池-->
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!--核心线程数-->
+        <property name="corePoolSize" value="15"/>
+        <!--最大线程数-->
+        <property name="maxPoolSize" value="20"/>
+        <!--队列最大数-->
+        <property name="queueCapacity" value="25"/>
+        <!--空闲时间 超过空闲时间该线程则会被终止-->
+        <property name="keepAliveSeconds" value="1000"/>
+    </bean>
 </beans>
