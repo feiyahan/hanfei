@@ -4,12 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <settings>
+        <!--延迟加载的全局开关。当开启时，所有关联对象都会延迟加载 默认false-->
         <setting name="lazyLoadingEnabled" value="false" />
+        <!--开启数据库下划线命名规则自动转为实体驼峰命名 默认false-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
     <typeAliases>
+        <!--指定一个包名，MyBatis 会在包名下面搜索需要的 Java Bean 别名默认为类名首字母小写-->
+        <package name="com.feiyahan.hanfei.pojo"/>
         <!-- 用户 -->
-        <typeAlias type="UserInfo" alias="userInfo"/>
-
+        <!--<typeAlias type="Users" alias="Users"/>-->
     </typeAliases>
 
 </configuration>

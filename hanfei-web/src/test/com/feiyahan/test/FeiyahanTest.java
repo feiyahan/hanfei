@@ -1,7 +1,10 @@
 package com.feiyahan.test;
 
+import com.alibaba.fastjson.JSONObject;
 import com.feiyahan.hanfei.pojo.Person;
+import com.feiyahan.hanfei.pojo.Users;
 import com.feiyahan.hanfei.service.AkkaService;
+import com.feiyahan.hanfei.service.CommonService;
 import com.feiyahan.hanfei.service.IDbService;
 import com.feiyahan.hanfei.service.IndexService;
 import org.junit.Test;
@@ -31,6 +34,9 @@ public class FeiyahanTest {
     @Qualifier("IDbServiceImpl")
     @Autowired
     private IDbService iDbService;
+
+    @Autowired
+    private CommonService commonService;
 
     @Test
     public void printProperties(){
@@ -67,5 +73,27 @@ public class FeiyahanTest {
         System.out.println();
         iDbService.insert(new Person("joy",20));
         iDbService.findAll();
+    }
+
+    @Test
+    public void testUsersDao(){
+        Users users=new Users();
+        users.setUsername("hf");
+        users.setLoginPass("123456");
+        users.setUserStatus(0);
+        users.setEmail("hf2@feiyahan.com");
+        users.setPhone("18888888888");
+        /*int uid = commonService.save(users);
+        System.out.println(uid);*/
+
+        users.setUid(2);
+        /*int update = commonService.update(users);
+        System.out.println(update);*/
+
+        /*Users byParams = (Users) commonService.findByParams(users);
+        System.out.println(JSONObject.toJSONString(byParams));*/
+
+        int delete = commonService.delete(users.getUid());
+        System.out.println(JSONObject.toJSONString(delete));
     }
 }

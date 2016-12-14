@@ -1,6 +1,5 @@
 package com.feiyahan.hanfei.service.impl;
 
-import com.feiyahan.hanfei.pojo.UserInfo;
 import com.feiyahan.hanfei.service.IndexService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

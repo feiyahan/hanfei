@@ -2,6 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <!-- 模板信息sql -->
 <mapper namespace="com.feiyahan.hanfei.dao.UsersDao">
-	
 
+    <!-- 保存User信息，并返回UID -->
+    <insert id="save" parameterType="users">
+        <!--<selectKey resultType="int" order="AFTER" keyProperty="uid">
+            SELECT @@IDENTITY AS uid
+        </selectKey>-->
+        INSERT INTO hf_users(username,login_pass,email,phone,user_status,create_time,modified_time)
+        VALUES(#{username},#{loginPass},#{email},#{phone},#{userStatus},NOW(),NOW())
+    </insert>
+
+    <!--修改User信息-->
+    <update id="update" parameterType="users">
+        UPDATE hf_users
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="loginPass!=null">login_pass=#{loginPass},</if>
+            <if test="email!=null">email=#{email},</if>
+            <if test="phone!=null">phone=#{phone},</if>
+            <if test="userStatus!=null">user_status=#{userStatus},</if>
+            <if test="true">modified_time=NOW()</if>
+        </trim>
+        WHERE
+        uid=#{uid}
+    </update>
+
+    <!--通过UID查询用户信息-->
+    <select id="findByParams" resultType="users" parameterType="int">
+        SELECT * FROM hf_users
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="uid!=0">uid=#{uid}</if>
+            <if test="username!=null">AND username=#{username}</if>
+            <if test="email!=null">AND email=#{email}</if>
+            <if test="phone!=null">AND phone=#{phone}</if>
+            <if test="userStatus!=null">AND user_status=#{userStatus}</if>
+        </trim>
+    </select>
+
+    <!--删除-->
+    <delete id="delete" parameterType="int">
+        DELETE FROM hf_users
+        WHERE uid=#{uid}
+    </delete>
 </mapper>

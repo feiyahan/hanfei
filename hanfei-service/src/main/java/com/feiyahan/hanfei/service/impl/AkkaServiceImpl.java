@@ -3,25 +3,19 @@ package com.feiyahan.hanfei.service.impl;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
-import akka.actor.Terminated;
-import akka.testkit.TestProbe;
 import akka.util.Timeout;
-import com.alibaba.fastjson.JSONObject;
+import com.feiyahan.hanfei.service.AkkaService;
 import com.feiyahan.hanfei.service.IndexService;
 import com.feiyahan.hanfei.service.akka.CountingActor;
-import com.feiyahan.hanfei.service.AkkaService;
-import com.feiyahan.hanfei.service.akka.CountingChild2Actor;
 import com.feiyahan.hanfei.service.akka.CountingChildActor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import scala.concurrent.Await;
-import scala.concurrent.Future;
 import scala.concurrent.duration.FiniteDuration;
 
 import java.util.concurrent.TimeUnit;
 
 import static akka.pattern.Patterns.ask;
-import static com.feiyahan.hanfei.service.akka.SpringExtension.SpringExtProvider;
 
 /**
  * Created by hanfei7 on 2016/9/21.
