@@ -1,13 +1,13 @@
 package com.feiyahan.hanfei.mongodb;
 
 import com.feiyahan.hanfei.pojo.Person;
+
 import com.mongodb.Mongo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
-import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
 

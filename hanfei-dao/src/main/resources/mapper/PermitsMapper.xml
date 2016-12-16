@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 模板信息sql -->
+<mapper namespace="com.feiyahan.hanfei.dao.PermitsDao">
+
+    <!-- 保存角色信息 -->
+    <insert id="save" parameterType="permits">
+        INSERT INTO hf_permits(parent_id,perm_name,perm_url,perm_status,create_time,modified_time)
+        VALUES(#{parentId},#{permName},#{permUrl},#{permStatus},NOW(),NOW())
+    </insert>
+
+    <!--修改角色信息-->
+    <update id="update" parameterType="permits">
+        UPDATE hf_permits
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="permName!=null">perm_name=#{permName},</if>
+            <if test="permUrl!=null">perm_name=#{permUrl},</if>
+            <if test="permStatus!=null">perm_status=#{permStatus},</if>
+            <if test="true">modified_time=NOW()</if>
+        </trim>
+        WHERE
+        id=#{id}
+    </update>
+
+    <!--通过参数查询权限信息-->
+    <select id="findByParams" resultType="permits" parameterType="permits">
+        SELECT * FROM hf_permits
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="id!=0">id=#{id}</if>
+            <if test="permName!=null">AND perm_name=#{permName}</if>
+            <if test="permUrl!=null">AND perm_url=#{permUrl}</if>
+            <if test="permStatus!=null">AND perm_status=#{permStatus}</if>
+        </trim>
+    </select>
+
+    <!--删除-->
+    <delete id="delete" parameterType="int">
+        DELETE FROM hf_permits
+        WHERE id=#{id}
+    </delete>
+
+    <!--根据UID查询用户角色-->
+    <select id="findPermitsByRoles" resultType="permits" parameterType="List">
+        SELECT p.* FROM hf_permits p,hf_roles_permits rp
+        WHERE p.id=rp.perm_id AND (rp.role_id=1 OR rp.role_id=2)
+    </select>
+</mapper>

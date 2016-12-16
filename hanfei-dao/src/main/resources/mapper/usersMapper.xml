@@ -27,7 +27,7 @@
     </update>
 
     <!--通过UID查询用户信息-->
-    <select id="findByParams" resultType="users" parameterType="int">
+    <select id="findByParams" resultType="users" parameterType="users">
         SELECT * FROM hf_users
         <trim prefix="WHERE" prefixOverrides="AND |OR ">
             <if test="uid!=0">uid=#{uid}</if>

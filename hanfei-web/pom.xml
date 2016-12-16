@@ -30,7 +30,6 @@
       <groupId>com.feiyahan</groupId>
       <artifactId>hanfei-service</artifactId>
       <version>1.0.0-SNAPSHOT</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.feiyahan</groupId>

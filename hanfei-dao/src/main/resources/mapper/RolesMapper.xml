@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 模板信息sql -->
+<mapper namespace="com.feiyahan.hanfei.dao.RolesDao">
+
+    <!-- 保存角色信息 -->
+    <insert id="save" parameterType="roles">
+        <!--<selectKey resultType="int" order="AFTER" keyProperty="uid">
+            SELECT @@IDENTITY AS uid
+        </selectKey>-->
+        INSERT INTO hf_roles(role_code,role_name,role_status,create_time,modified_time)
+        VALUES(#{roleCode},#{roleName},#{roleStatus},NOW(),NOW())
+    </insert>
+
+    <!--修改角色信息-->
+    <update id="update" parameterType="roles">
+        UPDATE hf_roles
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roleName!=null">role_name=#{roleName},</if>
+            <if test="roleStatus!=null">role_status=#{roleStatus},</if>
+            <if test="true">modified_time=NOW()</if>
+        </trim>
+        WHERE
+        id=#{id}
+    </update>
+
+    <!--通过参数查询角色信息-->
+    <select id="findByParams" resultType="roles" parameterType="roles">
+        SELECT * FROM hf_roles
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="id!=0">id=#{id}</if>
+            <if test="roleCode!=null">AND role_code=#{roleCode}</if>
+            <if test="roleName!=null">AND role_name=#{roleName}</if>
+            <if test="roleStatus!=null">AND role_status=#{roleStatus}</if>
+        </trim>
+    </select>
+
+    <!--删除-->
+    <delete id="delete" parameterType="int">
+        DELETE FROM hf_roles
+        WHERE id=#{id}
+    </delete>
+
+    <!--根据UID查询用户角色-->
+    <select id="findRolesByUid" resultType="roles" parameterType="int">
+        SELECT r.* FROM hf_roles r,hf_users_roles ur
+        WHERE r.id=ur.role_id AND ur.uid=#{uid}
+    </select>
+</mapper>
