@@ -6,16 +6,17 @@
     <!--<bean id="sysUserFilter" class="cn.ylnet.common.filter.MyFormAuthenticationFilter"/>-->
     <!-- 基于自定义Form表单的身份验证过滤器-->
     <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+    <!--<bean id="formAuthenticationFilter" class="com.feiyahan.hanfei.common.filter.MyFormLoginFilter">-->
         <property name="usernameParam" value="username"/>
         <property name="passwordParam" value="password"/>
-        <property name="loginUrl" value="/login.ftl"/>
+        <property name="loginUrl" value="/login"/>
     </bean>
     <!-- shiro Web过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
         <property name="loginUrl" value="/login"/>
         <property name="successUrl" value="/"/>
-        <property name="unauthorizedUrl" value="/" />
+        <property name="unauthorizedUrl" value="/unauthorized" />
         <property name="filters">
             <util:map>
                 <entry key="authc" value-ref="formAuthenticationFilter"/>
@@ -24,9 +25,10 @@
         <property name="filterChainDefinitions">
             <value>
 
-                /resources/** = anon
+                /resource/** = anon
                 <!--/ = anon-->
                 /login = authc
+                /authenticated = anon
                 /logout = logout
                 <!--/xsgl/user = roles[regionm,provincem,citym]-->
                 /** = authc

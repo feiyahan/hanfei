@@ -86,6 +86,7 @@
         <module>hanfei-pojo</module>
         <module>hanfei-dao</module>
         <module>hanfei-mongodb</module>
+        <module>hanfei-common</module>
     </modules>
 
     <dependencies>

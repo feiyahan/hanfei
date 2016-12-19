@@ -1,5 +1,6 @@
 package com.feiyahan.hanfei.service.security;
 
+import com.alibaba.fastjson.JSONObject;
 import com.feiyahan.hanfei.dao.PermitsDao;
 import com.feiyahan.hanfei.dao.RolesDao;
 import com.feiyahan.hanfei.dao.UsersDao;
@@ -13,6 +14,8 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -20,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class UserRealm extends AuthorizingRealm {
 
+    private final static Logger logger = LoggerFactory.getLogger(UserRealm.class);
     /**
      * 用户DAO
      */
@@ -43,6 +47,7 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         //获取登录时输入的用户名
         String loginName = (String) principalCollection.fromRealm(getName()).iterator().next();
+        logger.info("权限验证，doGetAuthorizationInfo()方法，loginName:{}", loginName);
         Users user = new Users();
         user.setUsername(loginName);
         LoginUser loginUser = new LoginUser();
@@ -53,16 +58,18 @@ public class UserRealm extends AuthorizingRealm {
             //查询当前用户的角色
             loginUser.setRoles(rolesDao.findRolesByUid(user.getUid()));
             //权限信息对象info,用来存放查出的用户的所有的角色（role）及权限（permission）
-            SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+            SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
             //用户的角色集合
-            info.setRoles(loginUser.getRolesCode());
+            authorizationInfo.setRoles(loginUser.getRolesCode());
             //用户的角色对应的所有权限，如果只使用角色定义访问权限，下面的四行可以不要
             /*List<Role> roleList=user.getRoleList();
             for (Role role : roleList) {
                 info.addStringPermissions(role.getPermissionsName());
             }*/
-            return info;
+            logger.info("权限验证，doGetAuthorizationInfo()方法，返回：{}", JSONObject.toJSONString(authorizationInfo));
+            return authorizationInfo;
         }
+        logger.info("权限验证，doGetAuthorizationInfo()方法，user:{} 不存在，返回NULL", loginName);
         return null;
     }
 
@@ -75,6 +82,7 @@ public class UserRealm extends AuthorizingRealm {
         //实际上这个authcToken是从LoginController里面currentUser.login(token)传过来的
         //两个token的引用都是一样的,本例中是org.apache.shiro.authc.UsernamePasswordToken@33799a1e
         UsernamePasswordToken login_token = (UsernamePasswordToken) authenticationToken;
+        logger.info("登录认证，入参：{}",JSONObject.toJSONString(authenticationToken));
         //System.out.println("验证当前Subject时获取到token为" + ReflectionToStringBuilder.toString(token, ToStringStyle.MULTI_LINE_STYLE));
         Users user = new Users();
         user.setUsername(login_token.getUsername());
@@ -82,13 +90,13 @@ public class UserRealm extends AuthorizingRealm {
 
         LoginUser loginUser = new LoginUser();
         loginUser.setUser(user);
-
+        logger.info("登录认证，loginUser:{}",JSONObject.toJSONString(loginUser));
         if (null != user && 1 == user.getUserStatus()) {
             AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUsername(), user.getLoginPass(), getName());
             loginUser.setRoles(rolesDao.findRolesByUid(user.getUid()));
             loginUser.setPermitses(permitsDao.findPermitsByRoles(loginUser.getRoles()));
             this.setSession("loginUser", loginUser);
-
+            logger.info("登录认证成功，返回：{}",JSONObject.toJSONString(authcInfo));
             return authcInfo;
         } else {
             throw new UnknownAccountException();
@@ -99,7 +107,7 @@ public class UserRealm extends AuthorizingRealm {
         Subject currentUser = SecurityUtils.getSubject();
         if (null != currentUser) {
             Session session = currentUser.getSession();
-            System.out.println("Session默认超时时间为[" + session.getTimeout() + "]毫秒");
+            logger.info("Session默认超时时间为[" + session.getTimeout() + "]毫秒");
             if (null != session) {
                 session.setAttribute(key, value);
             }
