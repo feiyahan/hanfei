@@ -5,17 +5,17 @@
 
     <!--<bean id="sysUserFilter" class="cn.ylnet.common.filter.MyFormAuthenticationFilter"/>-->
     <!-- 基于自定义Form表单的身份验证过滤器-->
-    <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
-    <!--<bean id="formAuthenticationFilter" class="com.feiyahan.hanfei.common.filter.MyFormLoginFilter">-->
+    <bean id="formAuthenticationFilter" class="com.feiyahan.hanfei.common.filter.MyFormLoginFilter"/>
+    <!--<bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
         <property name="usernameParam" value="username"/>
         <property name="passwordParam" value="password"/>
         <property name="loginUrl" value="/login"/>
-    </bean>
+    </bean>-->
     <!-- shiro Web过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
         <property name="loginUrl" value="/login"/>
-        <property name="successUrl" value="/"/>
+        <!--<property name="successUrl" value="/"/>-->
         <property name="unauthorizedUrl" value="/unauthorized" />
         <property name="filters">
             <util:map>
@@ -24,11 +24,11 @@
         </property>
         <property name="filterChainDefinitions">
             <value>
-
                 /resource/** = anon
+                /error = anon
+                /unauthorized = anon
                 <!--/ = anon-->
                 /login = authc
-                /authenticated = anon
                 /logout = logout
                 <!--/xsgl/user = roles[regionm,provincem,citym]-->
                 /** = authc
@@ -82,7 +82,9 @@
         <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
     </bean>-->
     <!-- realm实现 -->
-    <bean id="userRealm" class="com.feiyahan.hanfei.service.security.UserRealm"/>
+    <bean id="userRealm" class="com.feiyahan.hanfei.service.security.UserRealm">
+        <property name="authorizationCachingEnabled" value="false"/>
+    </bean>
     <!-- 安全管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="userRealm"/>

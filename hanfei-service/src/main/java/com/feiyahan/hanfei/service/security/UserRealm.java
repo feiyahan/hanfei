@@ -6,6 +6,10 @@ import com.feiyahan.hanfei.dao.RolesDao;
 import com.feiyahan.hanfei.dao.UsersDao;
 import com.feiyahan.hanfei.pojo.LoginUser;
 import com.feiyahan.hanfei.pojo.Users;
+import com.feiyahan.hanfei.service.CommonService;
+import com.feiyahan.hanfei.service.PermitsService;
+import com.feiyahan.hanfei.service.RolesService;
+import com.feiyahan.hanfei.service.UsersService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -24,21 +28,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserRealm extends AuthorizingRealm {
 
     private final static Logger logger = LoggerFactory.getLogger(UserRealm.class);
+
     /**
      * 用户DAO
      */
     @Autowired(required = false)
-    private UsersDao usersDao;
+    private UsersService usersService;
+
+
     /**
      * 角色DAO
      */
     @Autowired(required = false)
-    private RolesDao rolesDao;
+    private RolesService rolesService;
     /**
      * 权限DAO
      */
     @Autowired(required = false)
-    private PermitsDao permitsDao;
+    private PermitsService permitsService;
 
     /**
      * 权限认证
@@ -48,15 +55,12 @@ public class UserRealm extends AuthorizingRealm {
         //获取登录时输入的用户名
         String loginName = (String) principalCollection.fromRealm(getName()).iterator().next();
         logger.info("权限验证，doGetAuthorizationInfo()方法，loginName:{}", loginName);
-        Users user = new Users();
-        user.setUsername(loginName);
-        LoginUser loginUser = new LoginUser();
         //到数据库查是否有此对象
-        user = usersDao.findByParams(user);
-        loginUser.setUser(user);
-        if (user != null) {
+        LoginUser loginUser = (LoginUser) usersService.findByUsername(loginName);
+
+        if (loginUser != null) {
             //查询当前用户的角色
-            loginUser.setRoles(rolesDao.findRolesByUid(user.getUid()));
+            loginUser.setRoles(rolesService.findRolesByUid(loginUser.getUid()));
             //权限信息对象info,用来存放查出的用户的所有的角色（role）及权限（permission）
             SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
             //用户的角色集合
@@ -84,22 +88,26 @@ public class UserRealm extends AuthorizingRealm {
         UsernamePasswordToken login_token = (UsernamePasswordToken) authenticationToken;
         logger.info("登录认证，入参：{}",JSONObject.toJSONString(authenticationToken));
         //System.out.println("验证当前Subject时获取到token为" + ReflectionToStringBuilder.toString(token, ToStringStyle.MULTI_LINE_STYLE));
-        Users user = new Users();
-        user.setUsername(login_token.getUsername());
-        user = usersDao.findByParams(user);
-
-        LoginUser loginUser = new LoginUser();
-        loginUser.setUser(user);
-        logger.info("登录认证，loginUser:{}",JSONObject.toJSONString(loginUser));
-        if (null != user && 1 == user.getUserStatus()) {
-            AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUsername(), user.getLoginPass(), getName());
-            loginUser.setRoles(rolesDao.findRolesByUid(user.getUid()));
-            loginUser.setPermitses(permitsDao.findPermitsByRoles(loginUser.getRoles()));
-            this.setSession("loginUser", loginUser);
-            logger.info("登录认证成功，返回：{}",JSONObject.toJSONString(authcInfo));
-            return authcInfo;
+        String username = login_token.getUsername();
+        Users user = usersService.findByUsername(username);
+        logger.info("userRealm 根据用户名查询用户，返回：{}",JSONObject.toJSONString(user));
+        if (null != user) {
+            logger.info("loginUser is not null");
+            if( 1 == user.getUserStatus()){
+                LoginUser loginUser=LoginUser.getLoginUserByUser(user);
+                AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUsername(), user.getLoginPass(), getName());
+                loginUser.setRoles(rolesService.findRolesByUid(user.getUid()));
+//                loginUser.setPermitses(permitsService.findPermitsByRoles(loginUser.getRoles()));
+                this.setSession("currentUser", loginUser);
+                logger.info("return authcInfo:{}",JSONObject.toJSONString(authcInfo));
+                return authcInfo;
+            }else {
+                logger.info("被锁定的账户：{}",username);
+                throw new LockedAccountException("Locked Account "+username);
+            }
         } else {
-            throw new UnknownAccountException();
+            logger.info("未知账户：{}",username);
+            throw  new UnknownAccountException("unknown account "+username);
         }
     }
 
@@ -109,9 +117,9 @@ public class UserRealm extends AuthorizingRealm {
             Session session = currentUser.getSession();
             logger.info("Session默认超时时间为[" + session.getTimeout() + "]毫秒");
             if (null != session) {
+                logger.info("Session set currentUser:{}",JSONObject.toJSONString(value));
                 session.setAttribute(key, value);
             }
-
         }
     }
 }

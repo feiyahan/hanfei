@@ -34,10 +34,13 @@
             <if test="username!=null">AND username=#{username}</if>
             <if test="email!=null">AND email=#{email}</if>
             <if test="phone!=null">AND phone=#{phone}</if>
-            <if test="userStatus!=null">AND user_status=#{userStatus}</if>
+            <if test="true">AND user_status=#{userStatus}</if>
         </trim>
     </select>
-
+    <!--通过username查询用户信息-->
+    <select id="findByUsername" resultType="users" parameterType="String">
+        SELECT * FROM hf_users WHERE username=#{username}
+    </select>
     <!--删除-->
     <delete id="delete" parameterType="int">
         DELETE FROM hf_users

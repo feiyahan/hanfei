@@ -3,12 +3,11 @@ package com.feiyahan.test;
 import com.alibaba.fastjson.JSONObject;
 import com.feiyahan.hanfei.pojo.Person;
 import com.feiyahan.hanfei.pojo.Users;
-import com.feiyahan.hanfei.service.AkkaService;
-import com.feiyahan.hanfei.service.CommonService;
 import com.feiyahan.hanfei.service.IDbService;
 import com.feiyahan.hanfei.service.IndexService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,22 +27,20 @@ public class FeiyahanTest {
     @Autowired
     private IndexService indexService;
 
-    @Autowired
-    private AkkaService akkaService;
 
     @Qualifier("IDbServiceImpl")
     @Autowired
     private IDbService iDbService;
 
-    @Autowired
-    private CommonService commonService;
+    @Autowired(required = false)
+    private SqlSessionTemplate sessionTemplate;
 
     @Test
     public void printProperties(){
         indexService.printProperties();
     }
 
-    @Test
+    /*@Test
     public void testAkkaService(){
         for (int i = 0; i < 2; i++) {
             Thread thread = new Thread(new akkaClient(i, "host"+i));
@@ -67,7 +64,7 @@ public class FeiyahanTest {
             System.out.println("service "+num +" "+result);
         }
     }
-
+*/
     @Test
     public void testMongo(){
         System.out.println();
@@ -83,17 +80,11 @@ public class FeiyahanTest {
         users.setUserStatus(0);
         users.setEmail("hf2@feiyahan.com");
         users.setPhone("18888888888");
-        /*int uid = commonService.save(users);
-        System.out.println(uid);*/
+    }
 
-        users.setUid(2);
-        /*int update = commonService.update(users);
-        System.out.println(update);*/
-
-        /*Users byParams = (Users) commonService.findByParams(users);
-        System.out.println(JSONObject.toJSONString(byParams));*/
-
-        int delete = commonService.delete(users.getUid());
-        System.out.println(JSONObject.toJSONString(delete));
+    @Test
+    public void insertLike(){
+        Object btmxg_like = sessionTemplate.selectOne("btmxg_like");
+        System.out.println(JSONObject.toJSONString(btmxg_like));
     }
 }

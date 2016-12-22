@@ -5,8 +5,8 @@
 
     <!-- 保存角色信息 -->
     <insert id="save" parameterType="permits">
-        INSERT INTO hf_permits(parent_id,perm_name,perm_url,perm_status,create_time,modified_time)
-        VALUES(#{parentId},#{permName},#{permUrl},#{permStatus},NOW(),NOW())
+        INSERT INTO hf_permits(parent_id,perm_name,perm_url,perm_status,icon_class,create_time,modified_time)
+        VALUES(#{parentId},#{permName},#{permUrl},#{permStatus},${iconClass},NOW(),NOW())
     </insert>
 
     <!--修改角色信息-->
@@ -16,6 +16,7 @@
             <if test="permName!=null">perm_name=#{permName},</if>
             <if test="permUrl!=null">perm_name=#{permUrl},</if>
             <if test="permStatus!=null">perm_status=#{permStatus},</if>
+            <if test="iconClass!=null">icon_class=#{iconClass},</if>
             <if test="true">modified_time=NOW()</if>
         </trim>
         WHERE
@@ -30,6 +31,7 @@
             <if test="permName!=null">AND perm_name=#{permName}</if>
             <if test="permUrl!=null">AND perm_url=#{permUrl}</if>
             <if test="permStatus!=null">AND perm_status=#{permStatus}</if>
+            <if test="iconClass!=null">AND icon_class=#{iconClass}</if>
         </trim>
     </select>
 
@@ -40,8 +42,11 @@
     </delete>
 
     <!--根据UID查询用户角色-->
-    <select id="findPermitsByRoles" resultType="permits" parameterType="List">
+    <select id="findPermitsByRoles" resultType="permits">
         SELECT p.* FROM hf_permits p,hf_roles_permits rp
-        WHERE p.id=rp.perm_id AND (rp.role_id=1 OR rp.role_id=2)
+        WHERE p.id=rp.perm_id AND /*(rp.role_id=1 OR rp.role_id=2)*/
+        <foreach item="role" collection="list" open="(" separator=" OR " close=")">
+            rp.role_id=#{role.id}
+        </foreach>
     </select>
 </mapper>

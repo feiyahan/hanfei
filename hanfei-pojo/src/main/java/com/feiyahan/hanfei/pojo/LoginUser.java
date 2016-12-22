@@ -7,21 +7,11 @@ import java.util.Set;
 /**
  * Created by hanfei7 on 2016/12/16.
  */
-public class LoginUser {
-
-    private Users user;
+public class LoginUser extends Users {
 
     private List<Roles> roles;
 
     private List<Permits> permitses;
-
-    public Users getUser() {
-        return user;
-    }
-
-    public void setUser(Users user) {
-        this.user = user;
-    }
 
     public List<Roles> getRoles() {
         return roles;
@@ -47,4 +37,19 @@ public class LoginUser {
         }
         return set;
     }
+    public static LoginUser getLoginUserByUser(Users user){
+        try {
+            LoginUser loginUser=new LoginUser();
+            loginUser.setUid(user.getUid());
+            loginUser.setUsername(user.getUsername());
+            loginUser.setLoginPass(user.getLoginPass());
+            loginUser.setUserStatus(user.getUserStatus());
+
+            return loginUser;
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+            return null;
+        }
+    }
+
 }

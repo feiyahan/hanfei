@@ -30,18 +30,19 @@ public class MyFormLoginFilter extends PathMatchingFilter {
     @Override
     protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object
             mappedValue) throws Exception {
-
+        log.info("MyFormLoginFilter onPreHandle方法");
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
         if(SecurityUtils.getSubject().isAuthenticated()) {
+            log.info("user already login");
             return true;//已经登录过
         }
 
         String ajaxHeader = req.getHeader("x-requested-with");
 
         if(isLoginRequest(req)) {
-            if("post".equalsIgnoreCase(req.getMethod())) {//form表单提交
+            if("post".equalsIgnoreCase(req.getMethod())) {//form表单 post 提交
                 boolean loginSuccess = login(req); //登录
                 if(loginSuccess) {
                     return redirectToSuccessUrl(req, resp);
@@ -75,12 +76,12 @@ public class MyFormLoginFilter extends PathMatchingFilter {
     }
     private boolean login(HttpServletRequest req) {
         String username = req.getParameter("username");
-        String password = req.getParameter("loginPass");
+        String password = req.getParameter("password");
         String rememberMe = req.getParameter("rememberMe");
         log.info("login username:{} password:{} rememberMe:{}",username,password,rememberMe);
         try {
             UsernamePasswordToken token=new UsernamePasswordToken(username, new Md5Hash(password).toString());
-            token.setRememberMe(Boolean.parseBoolean(rememberMe));
+            token.setRememberMe(StringUtils.isEmpty(rememberMe)?false:true);
             SecurityUtils.getSubject().login(token);
         } catch (Exception e) {
             //清除session中当前user缓存

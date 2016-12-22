@@ -11,6 +11,7 @@ public class Permits {
     private String permName;
     private String permUrl;
     private String permStatus;
+    private String iconClass;
     private Date createTime;
     private Date modifiedTime;
 
@@ -52,6 +53,14 @@ public class Permits {
 
     public void setPermStatus(String permStatus) {
         this.permStatus = permStatus;
+    }
+
+    public String getIconClass() {
+        return iconClass;
+    }
+
+    public void setIconClass(String iconClass) {
+        this.iconClass = iconClass;
     }
 
     public Date getCreateTime() {

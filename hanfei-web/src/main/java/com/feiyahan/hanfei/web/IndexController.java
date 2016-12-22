@@ -1,13 +1,15 @@
 package com.feiyahan.hanfei.web;
 
+import com.feiyahan.hanfei.pojo.LoginUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.UnauthorizedException;
-import org.apache.shiro.crypto.hash.Md5Hash;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,15 +23,43 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/")
 public class IndexController {
     private final static Logger logger= LoggerFactory.getLogger(IndexController.class);
+
+    /**
+     * 首页
+     * */
     @RequestMapping(value = "index",method = RequestMethod.GET)
     public ModelAndView toIndex(){
-        ModelAndView mav = new ModelAndView("index");
+        ModelAndView mav = new ModelAndView("/index");
         mav.addObject("username","freemarker");
         return mav;
     }
-    @RequestMapping(value = "login")
-    public ModelAndView toLogin(HttpServletRequest request,ModelAndView modelAndView){
-        /*String exceptionClassName = (String)request.getAttribute("shiroLoginFailure");
+    /**
+     * 后台管理首页
+     * */
+    @RequestMapping(value = "admin/index",method = RequestMethod.GET)
+    public ModelAndView toAdminIndex(){
+        ModelAndView mav = new ModelAndView("admin/index");
+        return mav;
+    }
+
+    /**
+     * 登录GET请求
+     * */
+    @RequestMapping(value = "login",method = RequestMethod.GET)
+    public ModelAndView toLoginPage(HttpServletRequest request,ModelAndView modelAndView){
+        logger.info("to login page method");
+        return modelAndView;
+    }
+
+    /**
+     * 登录POST请求
+     * @param request
+     * @param modelAndView
+     * @return
+     */
+    @RequestMapping(value = "login",method = RequestMethod.POST)
+    public ModelAndView loginAuth(HttpServletRequest request,ModelAndView modelAndView){
+        String exceptionClassName = (String)request.getAttribute("shiroLoginFailure");
         logger.info("login exception {}",exceptionClassName);
         String error = null;
         if(UnknownAccountException.class.getName().equals(exceptionClassName)) {
@@ -45,24 +75,40 @@ public class IndexController {
         }else if(exceptionClassName != null) {
             error = "未知错误：" + exceptionClassName;
         }
-        modelAndView.addObject("error", error);*/
-        logger.info("to login page");
-        return modelAndView;
-    }
-    @RequestMapping(value = "login/auth",method = RequestMethod.POST)
-    public ModelAndView loginAuth(HttpServletRequest request,ModelAndView modelAndView){
-        String username = request.getParameter("username");
-        String password = request.getParameter("loginPass");
-        String rememberMe = request.getParameter("rememberMe");
-        logger.info("username:{} password:{} remeberMe:{}",username,password,rememberMe);
-        UsernamePasswordToken token=new UsernamePasswordToken(username, new Md5Hash(password).toString());
-        token.setRememberMe(Boolean.parseBoolean(rememberMe));
-        try {
-            SecurityUtils.getSubject().login(token);
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
+        if(StringUtils.isEmpty(error)){
+            logger.info("登录成功");
+            return modelAndView;
+        }else {
+            modelAndView.addObject("error", error);
+            modelAndView.setViewName("redirect:/error");
+            logger.info("登录失败");
+            return modelAndView;
         }
+    }
 
+    /**
+     * 登出
+     * @return
+     */
+    @RequestMapping(value="/logout",method = RequestMethod.GET)
+    public String logout(){
+        Subject currentUser = SecurityUtils.getSubject();
+        logger.info("currentUser {}",currentUser);
+        logger.info("session {}",currentUser.getSession());
+        if (null != currentUser && currentUser.getSession() != null){
+            logger.info("currentUser {} logout");
+            currentUser.logout();
+        }
+        return "redirect:/login";
+    }
+    /**
+     * 错误页面
+     * @param request
+     * @param modelAndView
+     * @return
+     */
+    @RequestMapping(value = "error")
+    public ModelAndView toError(HttpServletRequest request,ModelAndView modelAndView){
         return modelAndView;
     }
 

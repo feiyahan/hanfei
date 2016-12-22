@@ -14,4 +14,6 @@ public interface UsersDao extends CommonDao<Users>{
     Users findByParams(Users users);
 
     int delete(int uid);
+
+    Users findByUsername(String username);
 }
