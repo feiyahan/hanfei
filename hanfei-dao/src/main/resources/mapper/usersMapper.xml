@@ -46,4 +46,8 @@
         DELETE FROM hf_users
         WHERE uid=#{uid}
     </delete>
+
+    <select id="findAllUsers" resultType="users">
+        SELECT * FROM hf_users
+    </select>
 </mapper>

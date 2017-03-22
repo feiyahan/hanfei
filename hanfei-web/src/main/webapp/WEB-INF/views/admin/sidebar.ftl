@@ -18,7 +18,7 @@
 
         <li><a href="#" data-target=".accounts-menu" class="nav-header collapsed" data-toggle="collapse"><i class="glyphicon glyphicon-briefcase"></i> 用户 <span class="label label-info">+3</span></a></li>
         <li><ul class="accounts-menu nav nav-list collapse">
-            <li><a href="/admin/user/list"><span class="fa fa-caret-right"></span> 所有用户</a></li>
+            <li><a href="/admin/user/list" class=""><span class="fa fa-caret-right"></span> 所有用户</a></li>
             <li><a href="/admin/user/add"><span class="fa fa-caret-right"></span> 添加用户</a></li>
             <li ><a href="/admin/user/myself"><span class="fa fa-caret-right"></span> 我的资料</a></li>
             <#--<li ><a href="sign-up.html"><span class="fa fa-caret-right"></span> Sign Up</a></li>

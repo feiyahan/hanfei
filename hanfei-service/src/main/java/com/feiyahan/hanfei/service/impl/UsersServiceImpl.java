@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by hanfei7 on 2016/12/14.
  */
@@ -49,5 +51,10 @@ public class UsersServiceImpl implements CommonService<Users>,UsersService {
         Users user = usersDao.findByUsername(username);
         logger.info("根据用户名查询用户信息，Service出参：{}",JSONObject.toJSONString(user));
         return user;
+    }
+
+    @Override
+    public List<Users> findAllUsers() {
+        return usersDao.findAllUsers();
     }
 }

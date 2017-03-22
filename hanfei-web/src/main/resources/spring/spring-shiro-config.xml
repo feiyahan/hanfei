@@ -5,12 +5,12 @@
 
     <!--<bean id="sysUserFilter" class="cn.ylnet.common.filter.MyFormAuthenticationFilter"/>-->
     <!-- 基于自定义Form表单的身份验证过滤器-->
-    <bean id="formAuthenticationFilter" class="com.feiyahan.hanfei.common.filter.MyFormLoginFilter"/>
-    <!--<bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+    <!--<bean id="formAuthenticationFilter" class="com.feiyahan.hanfei.common.filter.MyFormLoginFilter"/>-->
+    <bean id="formAuthenticationFilter" class="com.feiyahan.hanfei.common.filter.MyFormAuthenticationFilter">
         <property name="usernameParam" value="username"/>
         <property name="passwordParam" value="password"/>
         <property name="loginUrl" value="/login"/>
-    </bean>-->
+    </bean>
     <!-- shiro Web过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
@@ -25,13 +25,14 @@
         <property name="filterChainDefinitions">
             <value>
                 /resource/** = anon
+                /api/** = anon
                 /error = anon
                 /unauthorized = anon
                 <!--/ = anon-->
                 /login = authc
                 /logout = logout
-                <!--/xsgl/user = roles[regionm,provincem,citym]-->
-                /** = authc
+                /admin/** = roles[admin]
+                /** = user
             </value>
         </property>
     </bean>

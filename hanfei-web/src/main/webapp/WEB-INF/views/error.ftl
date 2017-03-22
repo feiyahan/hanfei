@@ -5,6 +5,6 @@
     <title>错误页</title>
 </head>
 <body>
-${error}
+${exception}
 </body>
 </html>

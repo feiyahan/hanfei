@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- API sql -->
+<mapper namespace="com.feiyahan.hanfei.dao.ApiDao">
+
+    <!--通过api 资源信息-->
+    <select id="findByActionAndVersion" resultType="apiSource" >
+        SELECT * FROM hf_api_source WHERE act=#{action} AND ver=#{version} AND isOpen=1
+    </select>
+</mapper>

@@ -5,6 +5,7 @@ import com.feiyahan.hanfei.dao.PermitsDao;
 import com.feiyahan.hanfei.dao.RolesDao;
 import com.feiyahan.hanfei.dao.UsersDao;
 import com.feiyahan.hanfei.pojo.LoginUser;
+import com.feiyahan.hanfei.pojo.Roles;
 import com.feiyahan.hanfei.pojo.Users;
 import com.feiyahan.hanfei.service.CommonService;
 import com.feiyahan.hanfei.service.PermitsService;
@@ -21,6 +22,8 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * Created by hanfei7 on 2016/12/16.
@@ -56,11 +59,14 @@ public class UserRealm extends AuthorizingRealm {
         String loginName = (String) principalCollection.fromRealm(getName()).iterator().next();
         logger.info("权限验证，doGetAuthorizationInfo()方法，loginName:{}", loginName);
         //到数据库查是否有此对象
-        LoginUser loginUser = (LoginUser) usersService.findByUsername(loginName);
+        Users user = usersService.findByUsername(loginName);
 
-        if (loginUser != null) {
+        if (user != null) {
+            LoginUser loginUser = LoginUser.getLoginUserByUser(user);
             //查询当前用户的角色
-            loginUser.setRoles(rolesService.findRolesByUid(loginUser.getUid()));
+            List<Roles> rolesByUid = rolesService.findRolesByUid(user.getUid());
+            logger.info("权限验证，根据用户ID，查询用户角色：{}",JSONObject.toJSONString(rolesByUid));
+            loginUser.setRoles(rolesByUid);
             //权限信息对象info,用来存放查出的用户的所有的角色（role）及权限（permission）
             SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
             //用户的角色集合

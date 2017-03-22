@@ -32,6 +32,16 @@
             <artifactId>hanfei-mongodb</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.feiyahan</groupId>
+            <artifactId>hanfei-api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.feiyahan</groupId>
+            <artifactId>hanfei-common</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -77,7 +77,7 @@
                     <input type="password" class="form-controlspan12 form-control" name="password" placeholder="Password" value="123456">
                 </div>
                 <input type="submit" class="btn btn-primary pull-right" value="Sign in"/>
-                <label class="remember-me"><input type="checkbox" name="rememberMe"> Remember me</label>
+                <label class="remember-me"><input type="checkbox" name="rememberMe" checked="checked"> Remember me</label>
                 <div class="clearfix"></div>
             </form>
         </div>

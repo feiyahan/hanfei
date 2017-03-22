@@ -46,7 +46,7 @@ public class RolesServiceImpl implements CommonService<Roles>,RolesService {
     @Override
     public List<Roles> findRolesByUid(int uid) {
         List<Roles> rolesByUid = rolesDao.findRolesByUid(uid);
-        logger.info("rolesByUid:{}", JSONObject.toJSONString(rolesByUid));
+        logger.info("根据用户ID查询角色，出参:{}", JSONObject.toJSONString(rolesByUid));
         return rolesByUid;
     }
 }

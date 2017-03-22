@@ -1,4 +1,11 @@
+
 <style type="text/css">
+    #line-chart {
+        height:300px;
+        width:800px;
+        margin: 0px auto;
+        margin-top: 1em;
+    }
     .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover {
         color: #fff;
     }
@@ -19,8 +26,7 @@
         <ul id="main-menu" class="nav navbar-nav navbar-right">
             <li class="dropdown hidden-xs">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="glyphicon glyphicon-user padding-right-small"
-                          style="position:relative;top: 3px;"></span> ${currentUser.username}
+                    <span class="glyphicon glyphicon-user padding-right-small" style="position:relative;top: 3px;"></span> ${currentUser.username}
                     <i class="fa fa-caret-down"></i>
                 </a>
 

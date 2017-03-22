@@ -502,7 +502,7 @@ a.panel-heading:hover,
   border-bottom: 1px solid #ccc;
 }
 /*Buttons*/
-.btn {
+/*.btn {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
@@ -546,7 +546,7 @@ a.panel-heading:hover,
 .btn-warning:hover {
   background-color: #aaaa55;
   *background-color: #aaaa55;
-}
+}*/
 .well {
   background-color: #fff;
   border: 1px solid #ccc;
@@ -855,11 +855,11 @@ table.table.list tr:first-child td {
   }
 }
 .theme-blue .navbar {
-  background: #4d5b76;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #4d5b76), color-stop(1, #6f80a1));
-  background: -ms-linear-gradient(bottom, #4d5b76, #6f80a1);
-  background: -moz-linear-gradient(center bottom, #4d5b76 0%, #6f80a1 100%);
-  background: -o-linear-gradient(bottom, #4d5b76, #6f80a1);
+  background: #2d6ca2;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #2d6ca2), color-stop(1, #6f80a1));
+  background: -ms-linear-gradient(bottom, #2d6ca2, #6f80a1);
+  background: -moz-linear-gradient(center bottom, #2d6ca2 0%, #6f80a1 100%);
+  background: -o-linear-gradient(bottom, #2d6ca2, #6f80a1);
   filter: progid:dximagetransform.microsoft.gradient(startColorStr='#e3e3e3', EndColorStr='#ffffff');
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#6f80a1',EndColorStr='#4d5b76')";
 }

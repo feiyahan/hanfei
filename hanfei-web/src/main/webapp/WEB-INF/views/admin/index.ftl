@@ -3,32 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
-<#--移动设备优先-->
+    <#--移动设备优先-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
     <title>后台管理-首页</title>
-    <link href="/resource/favicon.ico" rel="shortcut icon">
-    <!-- 新 Bootstrap 核心 CSS 文件 -->
-    <link rel="stylesheet" href="/resource/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/resource/bootstrap/font-awesome/css/font-awesome.css">
-    <!-- 可选的Bootstrap主题文件（一般不用引入） -->
-<#--<link rel="stylesheet" href="/resource/bootstrap/css/bootstrap-theme.min.css">-->
+    <#-- 资源引用 -->
+    <#include "/admin/resource.ftl">
 
-    <link rel="stylesheet" href="/resource/stylesheets/theme.css">
-    <#--<link rel="stylesheet" href="/resource/stylesheets/premium.css">-->
-
-    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <script src="/resource/jquery/jquery-1.11.1.min.js"></script>
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="/resource/bootstrap/js/bootstrap.min.js"></script>
-
-    <script src="/resource/plugins/jQuery-Knob/js/jquery.knob.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        $(function() {
-            $(".knob").knob();
-        });
-    </script>
 </head>
 <body class="theme-blue">
 <!-- Demo page code -->
@@ -39,8 +21,8 @@
         if (match) var color = match[1];
         if (color) {
             $('body').removeClass(function (index, css) {
-                return (css.match(/\btheme-\S+/g) || []).join(' ')
-            })
+                return (css.match(/\btheme-\S+/g) || []).join(' ');
+            });
             $('body').addClass('theme-' + color);
         }
 
@@ -71,38 +53,6 @@
 
     </div>
     <div class="main-content">
-        <div class="panel panel-default">
-            <a href="#page-stats" class="panel-heading" data-toggle="collapse">Latest Stats</a>
-            <div id="page-stats" class="panel-collapse panel-body collapse in">
-
-                <div class="row">
-                    <div class="col-md-3 col-sm-6">
-                        <div class="knob-container">
-                            <input class="knob" data-width="200" data-min="0" data-max="3000" data-displayPrevious="true" value="2500" data-fgColor="#92A3C2" data-readOnly=true;>
-                            <h3 class="text-muted text-center">Accounts</h3>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="knob-container">
-                            <input class="knob" data-width="200" data-min="0" data-max="4500" data-displayPrevious="true" value="3299" data-fgColor="#92A3C2" data-readOnly=true;>
-                            <h3 class="text-muted text-center">Subscribers</h3>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="knob-container">
-                            <input class="knob" data-width="200" data-min="0" data-max="2700" data-displayPrevious="true" value="1840" data-fgColor="#92A3C2" data-readOnly=true;>
-                            <h3 class="text-muted text-center">Pending</h3>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="knob-container">
-                            <input class="knob" data-width="200" data-min="0" data-max="15000" data-displayPrevious="true" value="10067" data-fgColor="#92A3C2" data-readOnly=true;>
-                            <h3 class="text-muted text-center">Completed</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="row">
             <div class="col-sm-6 col-md-6">
