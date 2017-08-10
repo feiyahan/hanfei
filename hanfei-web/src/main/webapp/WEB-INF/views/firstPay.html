@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首付款计算</title>
+</head>
+<body>
+单价：<input name="unitPrice" id="unitPrice" type="number"><br>
+面积：<input name="roomSize" id="roomSize" type="number">
+<button id="btn" onclick="calculate()">计算</button>
+<div id="result"></div>
+<script>
+    function calculate(){
+        var unitPrice = document.getElementById("unitPrice").value;// 单价
+        var roomSize = document.getElementById("roomSize").value;// 房间面积
+        // 维修基金65/平 按揭服务费1500 总房款的1.5%
+        var sumPrice = unitPrice*roomSize;// 总房价
+        var saleSumPrice = (sumPrice-2000)*0.99*0.98;// 优惠后的房价
+        var taxRate = roomSize>=90?0.015:0.01;// 税率
+        var deedTax =saleSumPrice * taxRate;// 契税
+        var maintenanceFund = roomSize*65;// 维修基金
+        var serviceCharge = 1500;// 按揭服务费
+        var sumPrice30=saleSumPrice*0.3;
+        var firstPayPrice = sumPrice30+maintenanceFund+serviceCharge;// 首付款
+        var result = "<b>总房款：</b>"+unitPrice+"*"+roomSize+"="+sumPrice+"元<br/>"
+                        .concat("<b>优惠后：</b>("+sumPrice+"-2000)*0.99*0.98="+saleSumPrice+"元<br/>")
+                        .concat("<b>维修基金：</b>"+roomSize+"*65="+maintenanceFund+"元<br/>")
+                        .concat("<b>按揭服务费：</b>1500元<br/>")
+                        .concat("<b>首付款：</b>("+saleSumPrice+"*0.3)+"+maintenanceFund+"+"+serviceCharge+"="+firstPayPrice+"元<br/>")
+                        .concat("<b>贷款总额：</b>"+saleSumPrice+"-"+sumPrice30+"="+(saleSumPrice-sumPrice30)+"元<br/>")
+                        .concat("<b>契税交房的时候缴纳：</b>"+saleSumPrice+"*"+taxRate+"="+deedTax+"元");
+        document.getElementById("result").innerHTML=result;
+    }
+</script>
+</body>
+</html>

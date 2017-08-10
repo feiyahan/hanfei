@@ -88,6 +88,7 @@
         <module>hanfei-mongodb</module>
         <module>hanfei-common</module>
         <module>hanfei-api</module>
+        <module>hanfei-akka</module>
     </modules>
 
     <dependencies>
@@ -237,7 +238,7 @@
         </dependency>
 
         <!-- akka核心包 -->
-        <!--<dependency>
+        <dependency>
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-actor_2.11</artifactId>
             <version>2.3.15</version>
@@ -246,7 +247,12 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
-        </dependency>-->
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.2.0</version>
+        </dependency>
 
         <!--mongodb-->
         <dependency>
