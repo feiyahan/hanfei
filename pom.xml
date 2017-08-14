@@ -88,7 +88,7 @@
         <module>hanfei-mongodb</module>
         <module>hanfei-common</module>
         <module>hanfei-api</module>
-        <module>hanfei-akka</module>
+        <module>hanfei-concurrent</module>
     </modules>
 
     <dependencies>
