@@ -2,10 +2,7 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.actor.ScalaActorRef;
-import akka.dispatch.Futures;
-import akka.dispatch.Mapper;
-import akka.dispatch.OnComplete;
-import akka.dispatch.OnSuccess;
+import akka.dispatch.*;
 import akka.pattern.Patterns;
 import com.feiyahan.hanfei.akka.MasterActor;
 import com.feiyahan.hanfei.akka.SlaveActor;
@@ -32,69 +29,36 @@ public class MyActorTest {
         long sTime = System.currentTimeMillis();
         final List<Future<Object>> futureList = new ArrayList<Future<Object>>();
 //        final Integer[] result =new Integer[10];
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
 
-                for(int i=0;i<4;i++){
-                    /*ActorRef actorRef = system.actorOf(Props.create(SlaveActor.class));
-                    actorRef.tell("ADD",ActorRef.noSender());
-                    Future<Object> f = Patterns.ask(actorRef, "GET", 2000);
-                    futureList.add(f);*/
-
-                    try {
-                        /*ActorRef actorRef = system.actorOf(Props.create(SlaveActor.class));
-                        actorRef.tell("ADD",ActorRef.noSender());
-                        Future<Object> f = Patterns.ask(actorRef, "GET", 2000);*/
-                        Future<Object> future = Futures.future(new Callable<Object>() {
-                            @Override
-                            public Object call() throws Exception {
-                                System.out.println(Thread.currentThread().getName()+" sleep");
-                                Thread.sleep(5000);
-                                return 1;
-                            }
-                        }, dispatcher);
-                        futureList.add(future);
-                        /*f.onComplete(new OnComplete<Object>() {
-                            @Override
-                            public void onComplete(Throwable failure, Object success) throws Throwable {
-                                if(null != failure){
-                                    System.out.println("异常啦："+failure);
-                                }else {
-                                    int a = (Integer) success;
-                                    result[index]= a;
-                                }
-                            }
-                        },dispatcher);*/
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+        for(int i=0;i<4;i++){
+            Future<Object> future = Futures.future(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    System.out.println(Thread.currentThread().getName()+" sleep");
+                    Thread.sleep(5000);
+                    return 1;
                 }
-
-            }
-        });
-
-        thread.start();
-        thread.join();
-
-        Future<Iterable<Object>> sequence = Futures.sequence(futureList, dispatcher);
-
-
-        Future<Integer> resultFuture = sequence.map(new Mapper<Iterable<Object>,Integer>() {
-            @Override
-            public Integer apply(Iterable<Object> parameter) {
-                Iterator<Object> iterator = parameter.iterator();
-                Integer r = 0;
-                while (iterator.hasNext()){
-                    Object next = iterator.next();
-                    r+=(Integer) next;
-                }
-                return r;
-            }
-        },dispatcher);
-
-        Integer result = Await.result(resultFuture, Duration.create(5000,TimeUnit.MILLISECONDS));
+            }, dispatcher);
+            futureList.add(future);
+        }
         try {
+            Future<Iterable<Object>> sequence = Futures.sequence(futureList, dispatcher);
+
+            Future<Integer> resultFuture = sequence.map(new Mapper<Iterable<Object>,Integer>() {
+                @Override
+                public Integer apply(Iterable<Object> parameter) {
+                    System.out.println(Thread.currentThread().getName()+" sequence.map....");
+                    Iterator<Object> iterator = parameter.iterator();
+                    Integer r = 0;
+                    while (iterator.hasNext()){
+                        Object next = iterator.next();
+                        r+=(Integer) next;
+                    }
+                    return r;
+                }
+            },dispatcher);
+
+            Integer result = Await.result(resultFuture, Duration.create(4000,TimeUnit.MILLISECONDS));
             long eTime = System.currentTimeMillis();
             System.out.println("*******************"+(eTime-sTime));
             /*for (int i = 0;i<10;i++){
@@ -112,8 +76,9 @@ public class MyActorTest {
         }
 
     }
-    public static void main(String[] args) {
-        for(int i=0;i<10;i++){
+    public static void main(String[] args) throws Exception {
+        MyActorTest.test();
+        /*for(int i=0;i<10;i++){
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -125,20 +90,20 @@ public class MyActorTest {
                 }
             });
             thread.start();
-        }
+        }*/
 
     }
 }
 
-class PrintResult<T> extends OnSuccess<T> {
+/*class PrintResult<T> extends OnSuccess<T> {
 
     @Override
     public void onSuccess(T result) throws Throwable {
         System.out.println("result = "+result);
     }
 
-    /*@Override
+    *//*@Override
     public void onComplete(Throwable failure, T success) throws Throwable {
         System.out.println("result = "+success);
-    }*/
-}
+    }*//*
+}*/
