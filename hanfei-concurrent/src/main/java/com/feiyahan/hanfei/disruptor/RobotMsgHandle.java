@@ -17,6 +17,7 @@ public class RobotMsgHandle implements EventHandler<RobotMsgText>,WorkHandler<Ro
     public void onEvent(RobotMsgText robotMsgText) throws Exception {
         //这里做具体的消费逻辑
 //        robotMsgText.setMsgId(UUID.randomUUID().toString());//简单生成下ID
-        System.out.println(robotMsgText.toString());
+        System.out.println("消费者："+robotMsgText.toString()+Thread.currentThread().getName());
+        Thread.sleep(50);
     }
 }

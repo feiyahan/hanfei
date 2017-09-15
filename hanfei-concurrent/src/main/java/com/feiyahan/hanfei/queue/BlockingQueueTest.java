@@ -1,8 +1,7 @@
 package com.feiyahan.hanfei.queue;
 
 import java.util.Random;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 
 /**
  * Created by hanfei7 on 2017/8/28.
@@ -22,14 +21,13 @@ public class BlockingQueueTest {
         }
 
         public void run() {
-            while (!flag) {
-                int info = random.nextInt(100);
+//            while (!flag) {
+            for (int i = 0; i < 10000; i++) {
+                int info = i;
                 try {
                     blockingQueue.put(info);
                     System.out.println(Thread.currentThread().getName() + " produce " + info);
-                    Thread.sleep(50);
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -69,26 +67,32 @@ public class BlockingQueueTest {
     }
 
     public static void main(String[] args) {
-        BlockingQueue<Integer> blockingQueue = new LinkedBlockingQueue<Integer>(10);
+        long s = System.currentTimeMillis();
+        BlockingQueue<Integer> blockingQueue = new ArrayBlockingQueue<Integer>(64);
         Producer producer = new Producer(blockingQueue);
-        Consumer consumer = new Consumer(blockingQueue);
+        final Consumer consumer = new Consumer(blockingQueue);
+        Thread threadP = new Thread(producer, "producer");
+        threadP.start();
         //创建5个生产者，5个消费者
-        for (int i = 0; i < 10; i++) {
-            if (i < 5) {
-                new Thread(producer, "producer" + i).start();
-            } else {
-                new Thread(consumer, "consumer" + (i - 5)).start();
+        Thread threadC = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 10; i++) {
+                    new Thread(consumer, "consumer" + (i)).start();
+                }
             }
-        }
+        });
+        threadC.start();
 
         try {
-            Thread.sleep(1000);
+            threadP.join();
+            threadC.join();
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         producer.shutDown();
         consumer.shutDown();
+        System.out.println("总耗时："+(System.currentTimeMillis()-s));
 
     }
 }
