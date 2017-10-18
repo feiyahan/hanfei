@@ -22,7 +22,7 @@ public class RobotMsgMain {
         EventFactory<RobotMsgText> factory = RobotMsgText.EVENT_FACTORY;
 
         // Specify the size of the ring buffer, must be power of 2.
-        int bufferSize = 1024;
+        int bufferSize = 64;
 
         /**
          //BlockingWaitStrategy 是最低效的策略，但其对CPU的消耗最小并且在各种不同部署环境中能提供更加一致的性能表现
@@ -36,7 +36,9 @@ public class RobotMsgMain {
         Disruptor<RobotMsgText> disruptor = new Disruptor<RobotMsgText>(factory, bufferSize, executor, ProducerType.SINGLE, new YieldingWaitStrategy());
 
         // Connect the handler
-        disruptor.handleEventsWith(new RobotMsgHandle());
+//        disruptor.handleEventsWith(new RobotMsgHandle());
+        disruptor.handleEventsWithWorkerPool(new RobotMsgHandle(),new RobotMsgHandle(),new RobotMsgHandle(),new RobotMsgHandle(),new RobotMsgHandle(),
+                new RobotMsgHandle(),new RobotMsgHandle(),new RobotMsgHandle(),new RobotMsgHandle(),new RobotMsgHandle());
 
         // Start the Disruptor, starts all threads running
         disruptor.start();
@@ -44,40 +46,22 @@ public class RobotMsgMain {
         // Get the ring buffer from the Disruptor to be used for publishing.
         RingBuffer<RobotMsgText> ringBuffer = disruptor.getRingBuffer();
 
-        final RobotMsgProducer producer = new RobotMsgProducer(ringBuffer);
+        RobotMsgProducer producer = new RobotMsgProducer(ringBuffer);
 
-        ByteBuffer bb = ByteBuffer.allocate(8);
-        final RobotMsgText text = new RobotMsgText();
+//        ByteBuffer bb = ByteBuffer.allocate(8);
+        RobotMsgText text = new RobotMsgText();
         text.setPin("dddddd");
         text.setMsgType("aaaaaaa");
-        List<Future<Void>> futureList = new ArrayList<Future<Void>>();
-        for (long l = 0; l < 100; l++) {
-            final long finalL = l;
-            Future<Void> future = executor.submit(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    text.setMsgId("" + finalL);
-                    text.setMsg("我是生产者" + finalL);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    producer.onData(text);
-                    return null;
-                }
-            });
-            futureList.add(future);
-        }
-        for (int i = 0; i < futureList.size(); i++) {
-            try {
-                futureList.get(i).get();
-                System.out.println("future get " + i);
+
+        for (long l = 0; l < 10000; l++) {
+            text.setMsgId("" + l);
+            text.setMsg("我是生产者" + l);
+            /*try {
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+            }*/
+            producer.onData(text);
         }
         disruptor.shutdown();//关闭 disruptor，方法会堵塞，直至所有的事件都得到处理；
         executor.shutdown();//关闭 disruptor 使用的线程池；如果需要的话，必须手动关闭， disruptor 在 shutdown 时不会自动关闭；
