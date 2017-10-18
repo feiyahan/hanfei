@@ -61,4 +61,11 @@
             </props>
         </property>
     </bean>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean id="myInteractor" class="com.feiyahan.hanfei.common.MyInteractor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>
